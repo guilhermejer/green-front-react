@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useHistory } from "react-router-dom";
 import { Formik } from 'formik';
-import {Form} from './Form';
+import {Form} from '../../src/components/cadastro/Form';
 import api from '../../src/components/api';
 
 

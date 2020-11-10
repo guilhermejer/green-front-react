@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Formik } from 'formik';
-import { Form } from './login/Form';
+import { Form } from '../src/components/login/Form';
 import api from '../src/components/api';
 
 
