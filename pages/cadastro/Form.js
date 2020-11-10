@@ -160,3 +160,5 @@ export const Form = (props) => {
     </form>
       );
 };
+
+export default Form
