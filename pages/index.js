@@ -7,6 +7,7 @@ import Container from "@material-ui/core/Container";
 import { Formik } from 'formik';
 import { Form } from '../src/components/login/Form';
 import api from '../src/components/api';
+import { useRouter } from 'next/router'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -20,7 +21,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
-  const classes = useStyles();
+  const router = useRouter()
+  const classes = useStyles()
 
   const initvalues = {
     username:'',
@@ -31,7 +33,8 @@ export default function Login() {
     console.log(values);
 
     api.post('login/logar', values)
-    .then((res) => console.log('Login realizado com sucesso' + res.data))
+    .then((res) => console.log('Login realizado com sucesso' + res.data),
+    router.push('/home'))
     .catch((err) => {
       console.error("ops! ocorreu um erro" + err);
    });
