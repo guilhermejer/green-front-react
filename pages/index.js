@@ -33,8 +33,9 @@ export default function Login() {
     console.log(values);
 
     api.post('login/logar', values)
-    .then((res) => console.log('Login realizado com sucesso' + res.data),
-    router.push('/home'))
+    .then((res) => {
+    console.log('Login realizado com sucesso' + res.data);
+    router.push('/home')})
     .catch((err) => {
       console.error("ops! ocorreu um erro" + err);
    });
