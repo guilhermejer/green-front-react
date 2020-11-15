@@ -10,6 +10,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from "@material-ui/core/Typography";
 import {Appbar} from '../../src/components/home/Appbar';
 import api from '../../src/components/api';
+import Modal from '@material-ui/core/Modal';
+import {Form} from '../../src/components/home/Form';
+import { Formik } from 'formik';
 
 
 
@@ -57,18 +60,34 @@ const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },
+  modal: {
+    margin:0,
+    top:'50%',
+    left:'50%',
+    transform:'translate(-50%, -50%)',
+    position: 'absolute',
+    width: 600,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+  preco: {
+    marginTop: theme.spacing(2),
+    
+  }
 }));
 
 export default function Home() {
   const classes = useStyles();
-  const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const [produtos, setProdutos] = React.useState(null);
+  const [produtos, setProdutos] = React.useState([]);
+  const [modal, setModal] = React.useState(false);
 
 
   useEffect(() => {
     api.get('produto/')
     .then((res) => {
-     console.log('Produtos listados com sucesso' + res.data)
+    // console.log('Produtos listados com sucesso' + res.data)
      setProdutos(res.data)
      console.log(produtos)})
     .catch((err) => {
@@ -76,45 +95,131 @@ export default function Home() {
   });
   },[]);
 
+  const refreshList = () => {
+    api.get('produto/')
+    .then((res) => {
+    // console.log('Produtos listados com sucesso' + res.data)
+     setProdutos(res.data)})
+  };
+
+  const refreshListBusca = (data) => {
+    console.log(data);
+     setProdutos(data)
+  };
+
+  const initvalues = {
+    titulo:'',
+    slug:'',
+    descricao:'',
+    preco:'',
+    tags:'',
+    image:'',
+  }
+  const submitValues = (values, actions) => {
+
+        api.post('produto/',values)
+        .then((res) => {alert('Produto cadastrado com sucesso');
+        handleCloseModal();
+        refreshList()})
+        .catch((err) => {
+          console.error("ops! ocorreu um erro" + err);
+       });
+  }
+
+  const dellProduto = (value) => {
+    const reqbody = {"id":value}
+    console.log(reqbody);
+    
+    api.delete('produto/',{data: reqbody})
+    .then((res) => {refreshList();
+    alert('Produto deletado com sucesso!')})
+    .catch((err) => {
+      console.error("ops! ocorreu um erro" + err);
+   });
+   
+   
+}
+
+  const handleOpenModal = () => {
+    setModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setModal(false);
+  };
+
+  const modalBody = (
+    <div className={classes.modal}>
+    <h2 id="simple-modal-title">Novo produto:</h2>
+    <Formik         
+        initialValues={initvalues}
+        onSubmit={submitValues}>
+        {props => <Form {...props}/>}
+
+    </Formik>
+
+  </div>
+  );
  
+    const handleSearch = (values) => {
+      api.get('produto/tags/' + values)
+      .then((res) => {alert('Busca realizada com sucesso');
+      refreshListBusca(res.data);
+      handleCloseModal()})
+      .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+     });
+    }
+  
+    const initSearch = {
+      search:'',
+    }
+
   return (
 
     <div className={classes.grow}>
-    <Appbar />
+        <Formik         
+        initialValues={initSearch}
+        onSubmit={handleSearch}>
+        {props => <Appbar buscaCategoria={handleSearch} refresh={refreshList} {...props}/>}
+
+        </Formik>
 
      <main>
-        {/* Hero unit */}
+
         <div className={classes.heroContent}>
           <Container maxWidth="sm">
-            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-              Album layout
+            <Typography component="h1" variant="h2" align="center" color="primary" gutterBottom>
+              Green E-commerce
             </Typography>
             <Typography variant="h5" align="center" color="textSecondary" paragraph>
-              Something short and leading about the collection below—its contents, the creator, etc.
-              Make it short and sweet, but not too short so folks don&apos;t simply skip over it
-              entirely.
+            Bem vindo ao nosso marketplace!
             </Typography>
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">
                 <Grid item>
-                  <Button variant="contained" color="primary">
-                    Main call to action
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="outlined" color="primary">
-                    Secondary action
+                  <Button variant="contained" color="primary" onClick={handleOpenModal}>
+                    Criar anúncio
                   </Button>
                 </Grid>
               </Grid>
             </div>
           </Container>
         </div>
+
+        <Modal
+        open={modal}
+        onClose={handleCloseModal}
+      >
+        {modalBody}
+      </Modal>
+
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+            {produtos.map((produtos) => (
+
+              <Grid item key={produtos._id} xs={12} sm={6} md={4}>
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
@@ -123,18 +228,25 @@ export default function Home() {
                   />
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Heading
+                      {produtos.titulo}
                     </Typography>
                     <Typography>
-                      This is a media card. You can use this section to describe the content.
+                      {produtos.descricao}
                     </Typography>
+                    <Typography variant="h6" className={classes.preco} color="primary" align="right">
+                    {'R$' + produtos.preco.toLocaleString('pt-BR',{
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2
+                    })}
+                  </Typography>
                   </CardContent>
                   <CardActions>
                     <Button size="small" color="primary">
-                      View
+                      Comprar
                     </Button>
-                    <Button size="small" color="primary">
-                      Edit
+                    <Button size="small" color="primary"
+                    onClick={() => dellProduto(produtos._id)}>
+                      Excluir
                     </Button>
                   </CardActions>
                 </Card>

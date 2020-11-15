@@ -9,7 +9,10 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
+import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
+import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
+import SportsTennisIcon from '@material-ui/icons/SportsTennis';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -23,9 +26,18 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from "@material-ui/core/Typography";
+import Link from 'next/link';
 
 
 export const Appbar = (props) => {
+
+  const {
+    searchValue,
+    handleSubmit,
+    handleChange,
+    buscaCategoria,
+    refresh
+  } = props;
 
   const useStyles = makeStyles((theme) => ({
 
@@ -109,6 +121,14 @@ export const Appbar = (props) => {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  const handleBuscaCategoria = (cat) => {
+    buscaCategoria(cat);
+  }
+
+  const handleRefresh = () =>{
+    refresh();
+  }
+
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -142,16 +162,17 @@ export const Appbar = (props) => {
     >
       <List>
         <ListItem button key='Minha Conta'>
-          <ListItemIcon><InboxIcon /> </ListItemIcon>
+          <ListItemIcon><AccountCircleOutlinedIcon /> </ListItemIcon>
           <ListItemText primary={'Minha Conta'} />
         </ListItem>
 
       </List>
       <Divider />
       <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+        {['Tecnologia', 'Esporte e Lazer', 'Supermercado'].map((text, index) => (
+          <ListItem button key={text}
+          onClick={() => handleBuscaCategoria(text)} >
+            <ListItemIcon>{index === 0 ? <DevicesOtherIcon /> : index === 1 ? <SportsTennisIcon /> : <ShoppingCartIcon /> } </ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
         ))}
@@ -238,23 +259,36 @@ export const Appbar = (props) => {
             {renderList}
           </Drawer>
 
-
+          <Link href="/home">
+          <a onClick={handleRefresh}>
           <Image alt="Green Logo" src={Logo} width="50" height="50" />
+          </a>
+          </Link>
           <Typography className={classes.title} variant="h6" noWrap>
             Green
           </Typography>
+ 
+
+          
           <div className={classes.search}>
             <div className={classes.searchIcon}>
+
               <SearchIcon />
+
             </div>
+            <form onSubmit={handleSubmit} >
             <InputBase
+              name="search"
               placeholder="O que você procura?"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'pesquisa' }}
+              value={searchValue}
+              onChange={handleChange}
             />
+            </form>
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
