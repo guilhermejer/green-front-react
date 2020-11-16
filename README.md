@@ -3,7 +3,7 @@
 #  Não é necessário rodar o WEB em sua máquina!
 
 Graças à Versel, nosso APP é hosteado na faixa!
-<a href ="https://green-front-react-1jeyimbfl.vercel.app/"> Green Website </a>
+<a href ="https://green-front-react.vercel.app/"> Green Website </a>
 
 # Nosso website usa o framework super moderno NEXT JS:
 <a href ="https://nextjs.org/"> Next js </a>
