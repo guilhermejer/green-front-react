@@ -13,6 +13,7 @@ import api from '../../src/components/api';
 import Modal from '@material-ui/core/Modal';
 import {Form} from '../../src/components/home/Form';
 import { Formik } from 'formik';
+import {Footer} from '../../src/components/home/Footer';
 
 
 
@@ -52,10 +53,6 @@ const useStyles = makeStyles((theme) => ({
   },
   cardContent: {
     flexGrow: 1,
-  },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6),
   },
   grow: {
     flexGrow: 1,
@@ -161,11 +158,18 @@ export default function Home() {
   </div>
   );
  
-    const handleSearch = (values) => {
+    const handleSearchTag = (values) => {
       api.get('produto/tags/' + values)
-      .then((res) => {alert('Busca realizada com sucesso');
-      refreshListBusca(res.data);
-      handleCloseModal()})
+      .then((res) => {refreshListBusca(res.data)})
+      .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+     });
+    }
+
+    const handleSearch = (values) => {
+      console.log(values);
+      api.get('produto/getByName/' + values.search)
+      .then((res) => {refreshListBusca(res.data)})
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
      });
@@ -181,7 +185,7 @@ export default function Home() {
         <Formik         
         initialValues={initSearch}
         onSubmit={handleSearch}>
-        {props => <Appbar buscaCategoria={handleSearch} refresh={refreshList} {...props}/>}
+        {props => <Appbar buscaCategoria={handleSearchTag} refresh={refreshList} {...props}/>}
 
         </Formik>
 
@@ -255,18 +259,9 @@ export default function Home() {
           </Grid>
         </Container>
       </main>
-       {/* Footer */}
-       <footer className={classes.footer}>
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-          Something here to give the footer a purpose!
-        </Typography>
-
-      </footer>
-      {/* End footer */}
-
+      <Footer 
+        buscaCategoria={handleSearchTag}
+      />
     </div>
 
   );
