@@ -2,7 +2,7 @@
 
 #  Não é necessário rodar o WEB em sua máquina!
 
-Graças à Versel, nosso APP é hosteado na faixa!
+Graças à Versel e a Heroku, nosso APP e API são hosteados na faixa!
 <a href ="https://green-front-react.vercel.app/"> Green Website </a>
 
 # Nosso website usa o framework super moderno NEXT JS:
@@ -13,7 +13,8 @@ Graças à Versel, nosso APP é hosteado na faixa!
 ## Pré-requisitos
 
 Tenha o Node.Js 10.14.0 ou superior instalado;
-Certifique-se que a nossa API esteja rodando em sua máquina:
+
+Caso deseje realizar testes em ambiente local, alterar o endereço do arquivo api.js dentro de Components para localhost:3000 e baixe nossa API:
 <a href ="https://github.com/danilo-domingues/green-node-api/tree/develop"> Green API </a>
 
 ## Como instalar o Node.Js
