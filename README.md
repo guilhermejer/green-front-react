@@ -4,6 +4,7 @@
 
 Graças à Versel e a Heroku, nosso APP e API são hosteados na faixa!
 <a href ="https://green-front-react.vercel.app/"> Green Website </a>
+E o portal online roda com protocolo HTTPS
 
 # Nosso website usa o framework super moderno NEXT JS:
 <a href ="https://nextjs.org/"> Next js </a>
