@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import { Formik } from 'formik';
 import {Form} from '../../src/components/cadastro/Form';
 import api from '../../src/components/api';
+import { useRouter } from 'next/router'
 
 
 //#TODO USAR O FORMIK, YUP E AXIOS - JA INSTALADOS
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 export default function Cadastro (){
+    const router = useRouter()
     let history = useHistory();
     const classes = useStyles();
     const initvalues = {
@@ -45,7 +47,8 @@ export default function Cadastro (){
           "password":values.password}
 
           api.post('pessoa/createPessoa',{pessoa, login})
-          .then((res) => console.log('Cadastro realizado com sucesso' + res.data))
+          .then((res) =>{ alert('Cadastro realizado com sucesso')
+          router.push('/')})
           .catch((err) => {
             console.error("ops! ocorreu um erro" + err);
          });

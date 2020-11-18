@@ -85,8 +85,9 @@ export default function Home() {
     api.get('produto/')
     .then((res) => {
     // console.log('Produtos listados com sucesso' + res.data)
-     setProdutos(res.data)
-     console.log(produtos)})
+    console.log(res.data)
+     setProdutos(res.data);
+})
     .catch((err) => {
      console.error("ops! ocorreu um erro" + err);
   });
@@ -132,6 +133,7 @@ export default function Home() {
     alert('Produto deletado com sucesso!')})
     .catch((err) => {
       console.error("ops! ocorreu um erro" + err);
+      
    });
    
    
@@ -169,7 +171,9 @@ export default function Home() {
     const handleSearch = (values) => {
       console.log(values);
       api.get('produto/getByName/' + values.search)
-      .then((res) => {refreshListBusca(res.data)})
+      .then((res) => {
+        console.log(res);
+        setProdutos(res.data)})
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
      });
